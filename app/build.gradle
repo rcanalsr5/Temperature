@@ -17,11 +17,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+    }
 }
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.0.0'
-    compile files('D:/work/Android/Temperature/lib/libs/jsch-0.1.53.jar')
     compile files('libs/jsch-0.1.53.jar')
 }
 

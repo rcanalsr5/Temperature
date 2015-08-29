@@ -28,14 +28,22 @@ import com.jcraft.jsch.Session;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class MainActivity extends AppCompatActivity {
     GetTemperature temperature;
     TextView roomTemp, roomHum, outTemp;
     ProgressBar progressBar;
+    TextView dateTime;
 
     public SharedPreferences sPref;
     String host, port, username, password;
@@ -55,12 +63,28 @@ public class MainActivity extends AppCompatActivity {
         });*/
 
 
-
+        dateTime = (TextView) findViewById(R.id.dateTime);
+        sPref = getSharedPreferences("last_results", MODE_PRIVATE);
 
         roomTemp = (TextView)findViewById(R.id.roomTemp);
         roomHum = (TextView)findViewById(R.id.roomHum);
         outTemp = (TextView) findViewById(R.id.outTemp);
+
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        String roomTemp = sPref.getString("roomTemp", "0");
+        String roomHum = sPref.getString("roomHum", "0");
+        String outTemp = sPref.getString("outTemp", "0");
+        String dateTimeS = sPref.getString("dateTime", "");
+        if (dateTimeS.equals(""))
+            dateTime.setText("");
+        else
+            dateTime.setText(getString(R.string.updated_text) + ": " + dateTimeS);
+
+
+        this.roomTemp.setText(roomTemp + "°C");
+        this.roomHum.setText(roomHum + "%");
+        this.outTemp.setText(outTemp + "°C");
+
 
         sPref = getSharedPreferences("connection_setting", MODE_PRIVATE);
 
@@ -74,7 +98,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
         else {
-            getTemperature();
+            if (roomTemp.equals("0") || roomHum.equals("0") || outTemp.equals("0"))
+                getTemperature();
         }
 
     }
@@ -109,9 +134,10 @@ public class MainActivity extends AppCompatActivity {
             temperature = new GetTemperature();
             temperature.execute("ls");
 
+
         }
         else
-            Toast.makeText(getApplicationContext(), "Включите WiFi.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Нет подключения к WiFi.", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -160,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
         getTemperature();
 
     }
-
     private class GetTemperature extends AsyncTask<String, Void, String>{
 
         //String command;
@@ -190,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
                     Properties prop = new Properties();
                     prop.put("StrictHostKeyChecking", "no");
                     session.setConfig(prop);
+                    session.setTimeout(6000);
 
                     session.connect();
 
@@ -225,8 +251,11 @@ public class MainActivity extends AppCompatActivity {
                     //result = "no error but not connect";
 
             }
-            catch (Exception e){
+            catch (JSchException e){
                 //result = e.getMessage();
+                result = "error" + " " + e.getMessage();
+                e.printStackTrace();
+            } catch (IOException e) {
                 result = "error" + " " + e.getMessage();
                 e.printStackTrace();
             }
@@ -237,10 +266,19 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             //this.result = result;
+
             progressBar.setVisibility(ProgressBar.INVISIBLE);
+            sPref = getSharedPreferences("last_results", MODE_PRIVATE);
+            SharedPreferences.Editor ed = sPref.edit();
+
+            Date date = new Date();
+            SimpleDateFormat format = new SimpleDateFormat("HH:mm\ndd.MM.yyyy", Locale.getDefault());
+            String dateTimeS = format.format(date);
+
             /*if (mSwipeRefreshLayout.isRefreshing())
                 mSwipeRefreshLayout.setRefreshing(false);*/
             if (!result.startsWith("error")) {
+                dateTime.setText(getString(R.string.updated_text) + ": " + dateTimeS);
                 result = result.trim();
                 String[] results = result.split("\n");
                 String[] resultArr = results[0].split(",");
@@ -250,6 +288,11 @@ public class MainActivity extends AppCompatActivity {
                 roomTemp.setText(resultArr[1] + "°C");
                 roomHum.setText(resultArr[0] + "%");
                 outTemp.setText(String.format("%.2f", outdoorTemp).replace(',', '.') + "°C");
+                ed.putString("roomTemp", resultArr[1]);
+                ed.putString("roomHum", resultArr[0]);
+                ed.putString("outTemp", String.format("%.2f", outdoorTemp).replace(',', '.'));
+                ed.putString("dateTime", dateTimeS);
+                ed.apply();
             }
             else
                 Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();

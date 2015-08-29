@@ -187,7 +187,7 @@ public class TemperatureWidget extends AppWidgetProvider {
             if (inet)
                 wifi = true;
             else {
-                Toast.makeText(context, "Нет интернета.", Toast.LENGTH_SHORT).show();
+
                 wifi = false;
             }
         }
@@ -209,7 +209,7 @@ public class TemperatureWidget extends AppWidgetProvider {
         CharSequence widgetText = context.getString(R.string.appwidget_text);
         // Construct the RemoteViews object
 
-        views.setTextViewText(R.id.outTemp, widgetText);
+
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }

@@ -39,6 +39,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/temperature_widget_info" />
         </receiver>
+
     </application>
 
 </manifest>

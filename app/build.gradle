@@ -1,20 +1,28 @@
 apply plugin: 'com.android.application'
 android {
     signingConfigs {
+        config {
+            keyAlias 'MyAppKey'
+            keyPassword 'hell1991'
+            storeFile file('/home/bes/Android/myKey.jks')
+            storePassword 'hell1991'
+        }
     }
     compileSdkVersion 23
     buildToolsVersion "23.0.0"
     defaultConfig {
         applicationId "com.example.eugenekayuda.temperature"
-        minSdkVersion 16
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        signingConfig signingConfigs.config
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
     productFlavors {
@@ -22,7 +30,8 @@ android {
 }
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:23.0.0'
     compile files('libs/jsch-0.1.53.jar')
+    compile 'com.android.support:appcompat-v7:23.0.0'
+    compile 'com.android.support:support-v4:23.0.0'
 }
 

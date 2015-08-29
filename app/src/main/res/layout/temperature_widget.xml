@@ -1,0 +1,77 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:padding="@dimen/widget_margin">
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:rowCount="3"
+        android:layout_centerInParent="true"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/def_temp"
+            android:id="@+id/roomTempW"
+            android:layout_above="@+id/roomHumW"
+            android:layout_alignLeft="@+id/roomHumW"
+            android:layout_alignStart="@+id/roomHumW"
+            android:layout_column="1"
+            android:layout_row="0"
+            android:layout_gravity="center_vertical" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView5"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:src="@mipmap/ic_humidity" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/def_hum"
+            android:id="@+id/roomHumW"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_row="1"
+            android:layout_column="1"
+            android:layout_gravity="center_vertical" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView6"
+            android:layout_row="2"
+            android:layout_column="0"
+            android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/def_temp"
+            android:id="@+id/outTempW"
+            android:layout_below="@+id/roomHumW"
+            android:layout_centerHorizontal="true"
+            android:layout_column="1"
+            android:layout_row="2"
+            android:layout_gravity="center_vertical" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView4"
+            android:src="@mipmap/ic_house"
+            android:layout_alignBottom="@+id/textView"
+            android:layout_toLeftOf="@+id/textView"
+            android:layout_toStartOf="@+id/textView"
+            android:layout_column="0"
+            android:layout_row="0" />
+    </GridLayout>
+</RelativeLayout>

@@ -10,6 +10,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -35,12 +36,27 @@ public class MainActivity extends AppCompatActivity {
     GetTemperature temperature;
     TextView roomTemp, roomHum, outTemp;
     ProgressBar progressBar;
+
     public SharedPreferences sPref;
     String host, port, username, password;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /*mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_main_swipe_refresh_layout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.red, R.color.orange, R.color.green);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getTemperature();
+            }
+        });*/
+
+
+
+
         roomTemp = (TextView)findViewById(R.id.roomTemp);
         roomHum = (TextView)findViewById(R.id.roomHum);
         outTemp = (TextView) findViewById(R.id.outTemp);
@@ -56,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
         if (host == "" || port == "" || username == "" || password == ""){
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
+        }
+        else {
+            getTemperature();
         }
 
     }
@@ -82,19 +101,22 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void updateResults(View view) {
+    public void getTemperature(){
 
-
-        boolean inet = isNetworkConnected();
         boolean wifi = isWiFiConnected();
         if (wifi) {
 
-                temperature = new GetTemperature();
-                temperature.execute("ls");
+            temperature = new GetTemperature();
+            temperature.execute("ls");
 
         }
         else
             Toast.makeText(getApplicationContext(), "Включите WiFi.", Toast.LENGTH_SHORT).show();
+
+    }
+
+    public void updateResults(View view) {
+        getTemperature();
     }
 
     private boolean isWiFiConnected(){
@@ -135,14 +157,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateResults(MenuItem item) {
-        boolean inet = isNetworkConnected();
-        boolean wifi = isWiFiConnected();
-        if (wifi) {
-            temperature = new GetTemperature();
-            temperature.execute("ls");
-        }
-        else
-            Toast.makeText(getApplicationContext(), "Включите WiFi.", Toast.LENGTH_SHORT).show();
+        getTemperature();
 
     }
 
@@ -212,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
             }
             catch (Exception e){
                 //result = e.getMessage();
-                result = "error" + "," + e.getMessage();
+                result = "error" + " " + e.getMessage();
                 e.printStackTrace();
             }
             //result = params[0];
@@ -223,15 +238,21 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             //this.result = result;
             progressBar.setVisibility(ProgressBar.INVISIBLE);
-            result = result.trim();
-            String [] results = result.split("\n");
-            String[] resultArr = results[0].split(",");
-            String [] resultOutTemp = results[2].split("=");
-            double outdoorTemp = Double.parseDouble(resultOutTemp[1]) / 1000;
+            /*if (mSwipeRefreshLayout.isRefreshing())
+                mSwipeRefreshLayout.setRefreshing(false);*/
+            if (!result.startsWith("error")) {
+                result = result.trim();
+                String[] results = result.split("\n");
+                String[] resultArr = results[0].split(",");
+                String[] resultOutTemp = results[2].split("=");
+                double outdoorTemp = Double.parseDouble(resultOutTemp[1]) / 1000;
 
-            roomTemp.setText(resultArr[1] + "°C");
-            roomHum.setText(resultArr[0] + "%");
-            outTemp.setText(String.format("%.2f", outdoorTemp).replace(',', '.') + "°C");
+                roomTemp.setText(resultArr[1] + "°C");
+                roomHum.setText(resultArr[0] + "%");
+                outTemp.setText(String.format("%.2f", outdoorTemp).replace(',', '.') + "°C");
+            }
+            else
+                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
 
         }
 

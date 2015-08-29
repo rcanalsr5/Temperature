@@ -1,5 +1,6 @@
 package com.example.eugenekayuda.temperature;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -81,12 +82,17 @@ public class SettingsActivity extends AppCompatActivity {
         String port = "22";
         if (this.port.getText().toString()!="")
             port = this.port.getText().toString();
-        ed.putString("host", host.getText().toString());
+
+        ed.putString("host", host.getText().toString().replaceAll(" ", ""));
         ed.putString("port", port);
         ed.putString("username", username.getText().toString());
         ed.putString("password", password.getText().toString());
-        ed.commit();
-        Toast.makeText(SettingsActivity.this, "Настройки сохранены", Toast.LENGTH_SHORT).show();
-        finish();
+        if (ed.commit()) {
+            Toast.makeText(SettingsActivity.this, "Настройки сохранены", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+            startActivity(intent);
+        }
+        else
+            Toast.makeText(SettingsActivity.this, "Настройки не сохранены", Toast.LENGTH_SHORT).show();
     }
 }

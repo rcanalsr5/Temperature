@@ -75,11 +75,19 @@ public class MainActivity extends AppCompatActivity {
         String roomHum = sPref.getString("roomHum", "0");
         String outTemp = sPref.getString("outTemp", "0");
         String dateTimeS = sPref.getString("dateTime", "");
-        if (dateTimeS.equals(""))
+        Date currentDate = new Date();
+        Date lastDate = new Date(sPref.getLong("lastDate", 0));
+        long diff = (currentDate.getTime() - lastDate.getTime()) / (1000L * 60L * 60L * 24L);
+        String [] updatedDate = dateTimeS.split("\n");
+        //dateTime.setText(sPref.getString("lastDate", ""));
+        if (diff == 0)
+            dateTime.setText(getString(R.string.updated_text) + ": " + updatedDate[0] + "\n" + getString(R.string.today_text));
+        else if (diff == 1)
+            dateTime.setText(getString(R.string.updated_text) + ": " + updatedDate[0] + "\n" + getString(R.string.yesterday_text));
+        else if (dateTimeS.equals(""))
             dateTime.setText("");
         else
             dateTime.setText(getString(R.string.updated_text) + ": " + dateTimeS);
-
 
         this.roomTemp.setText(roomTemp + "°C");
         this.roomHum.setText(roomHum + "%");
@@ -98,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
         else {
-            if (roomTemp.equals("0") || roomHum.equals("0") || outTemp.equals("0"))
+            if (roomTemp.equals("0") || roomHum.equals("0") || outTemp.equals("0") || diff == currentDate.getTime())
                 getTemperature();
         }
 
@@ -278,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
             /*if (mSwipeRefreshLayout.isRefreshing())
                 mSwipeRefreshLayout.setRefreshing(false);*/
             if (!result.startsWith("error")) {
-                dateTime.setText(getString(R.string.updated_text) + ": " + dateTimeS);
+                dateTime.setText(getString(R.string.updated_text) + ": " + dateTimeS.split("\n")[0] + "\n" + getString(R.string.today_text));
                 result = result.trim();
                 String[] results = result.split("\n");
                 String[] resultArr = results[0].split(",");
@@ -292,6 +300,7 @@ public class MainActivity extends AppCompatActivity {
                 ed.putString("roomHum", resultArr[0]);
                 ed.putString("outTemp", String.format("%.2f", outdoorTemp).replace(',', '.'));
                 ed.putString("dateTime", dateTimeS);
+                ed.putLong("lastDate", date.getTime());
                 ed.apply();
             }
             else

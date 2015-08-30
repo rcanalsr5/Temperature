@@ -9,4 +9,6 @@
     <string name="title_activity_settings">Настройки</string>
     <string name="action_update">Обновить</string>
     <string name="updated_text">Обновлено</string>
+    <string name="yesterday_text">Вчера</string>
+    <string name="today_text">Сегодня</string>
 </resources>

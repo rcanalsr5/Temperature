@@ -13,13 +13,7 @@
     <string name="def_hum">0%</string>
     <string name="updated_text">Updated</string>
     <string name="title_activity_main2">Main2Activity</string>
-
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_example">Example action</string>
+    <string name="today_text">Today</string>
+    <string name="yesterday_text">Yesterday</string>
 </resources>

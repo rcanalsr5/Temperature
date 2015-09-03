@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="host_text_view" translatable="false">Host</string>
+    <string name="port_text_view">Port: 22</string>
+    <string name="username_text_view">Username</string>
+    <string name="password_text_view">Password</string>
+</resources>

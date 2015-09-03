@@ -11,4 +11,12 @@
     <string name="updated_text">Обновлено</string>
     <string name="yesterday_text">Вчера</string>
     <string name="today_text">Сегодня</string>
+    <string name="port_text_view">Порт: 22</string>
+    <string name="password_text_view">Пароль</string>
+    <string name="username_text_view">Имя пользователя</string>
+    <string name="clear_button">Очистить</string>
+    <string name="def_hum">0%</string>
+    <string name="def_temp">0°C</string>
+    <string name="add_widget">Добавить виджет</string>
+    <string name="action_example">Пример события</string>
 </resources>

@@ -11,4 +11,12 @@
     <string name="updated_text">Updated</string>
     <string name="yesterday_text">Yesterday</string>
     <string name="today_text">Today</string>
+    <string name="password_text_view">Password</string>
+    <string name="username_text_view">Username</string>
+    <string name="port_text_view">Port: 22</string>
+    <string name="clear_button">Clear</string>
+    <string name="def_hum">0%</string>
+    <string name="def_temp">0°C</string>
+    <string name="add_widget">Add widget</string>
+    <string name="action_example">Example action</string>
 </resources>

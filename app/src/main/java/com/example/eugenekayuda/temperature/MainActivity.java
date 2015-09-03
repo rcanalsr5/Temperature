@@ -1,5 +1,9 @@
 package com.example.eugenekayuda.temperature;
 
+import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,10 +13,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.nfc.Tag;
 import android.os.AsyncTask;
+import android.os.Parcel;
+import android.os.Vibrator;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -32,6 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
@@ -47,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
 
     public SharedPreferences sPref;
     String host, port, username, password;
+
+    Vibrator vibrator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
-
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         dateTime = (TextView) findViewById(R.id.dateTime);
         sPref = getSharedPreferences("last_results", MODE_PRIVATE);
 
@@ -75,14 +88,23 @@ public class MainActivity extends AppCompatActivity {
         String roomHum = sPref.getString("roomHum", "0");
         String outTemp = sPref.getString("outTemp", "0");
         String dateTimeS = sPref.getString("dateTime", "");
+        Calendar currentCal = Calendar.getInstance();
+        Calendar lastCal = Calendar.getInstance();
         Date currentDate = new Date();
+        currentCal.setTime(currentDate);
+
         Date lastDate = new Date(sPref.getLong("lastDate", 0));
-        long diff = (currentDate.getTime() - lastDate.getTime()) / (1000L * 60L * 60L * 24L);
+        //lastCal.set(Calendar.DATE, 30);
+        lastCal.setTime(lastDate);
+
+        int datesDiff = currentCal.get(Calendar.DATE) - lastCal.get(Calendar.DATE);
+
+        long diff = (System.currentTimeMillis() - lastDate.getTime());
         String [] updatedDate = dateTimeS.split("\n");
         //dateTime.setText(sPref.getString("lastDate", ""));
-        if (diff == 0)
+        if (datesDiff == 0)
             dateTime.setText(getString(R.string.updated_text) + ": " + updatedDate[0] + "\n" + getString(R.string.today_text));
-        else if (diff == 1)
+        else if (datesDiff == 1)
             dateTime.setText(getString(R.string.updated_text) + ": " + updatedDate[0] + "\n" + getString(R.string.yesterday_text));
         else if (dateTimeS.equals(""))
             dateTime.setText("");
@@ -125,10 +147,15 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        vibrator.vibrate(50);
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             return true;
+        }*/
+
+        switch (id){
+            case R.id.action_update: getTemperature(); break;
+            case R.id.action_settings: openSettings(); break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -170,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isNetworkConnected() {
+   private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo ni = cm.getActiveNetworkInfo();
@@ -185,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void openSettings(MenuItem item) {
+    public void openSettings() {
         Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
         startActivity(intent);
     }

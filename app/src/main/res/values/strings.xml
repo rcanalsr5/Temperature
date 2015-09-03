@@ -7,13 +7,14 @@
     <string name="settings_title">Settings</string>
     <string name="title_activity_settings">Settings</string>
     <string name="show_password">Show password</string>
-    <string name="appwidget_text">Text</string>
+    <string name="appwidget_text" translatable="false">Text</string>
     <string name="add_widget">Add widget</string>
     <string name="def_temp">0°C</string>
     <string name="def_hum">0%</string>
     <string name="updated_text">Updated</string>
-    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_main2" translatable="false">Main2Activity</string>
     <string name="action_example">Example action</string>
     <string name="today_text">Today</string>
     <string name="yesterday_text">Yesterday</string>
+    <string name="clear_button">Clear</string>
 </resources>

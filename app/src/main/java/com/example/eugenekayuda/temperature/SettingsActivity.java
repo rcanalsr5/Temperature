@@ -95,4 +95,11 @@ public class SettingsActivity extends AppCompatActivity {
         else
             Toast.makeText(SettingsActivity.this, "Настройки не сохранены", Toast.LENGTH_SHORT).show();
     }
+
+    public void clearAll(View view) {
+        host.setText("");
+        port.setText("");
+        username.setText("");
+        password.setText("");
+    }
 }

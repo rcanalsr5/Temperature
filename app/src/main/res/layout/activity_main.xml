@@ -14,9 +14,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
         android:src="@mipmap/ic_house"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+
         android:layout_column="0"
         android:layout_row="0"
         android:layout_gravity="center_vertical" />
@@ -92,7 +90,7 @@
         android:layout_alignParentEnd="true"
         android:layout_column="5"
         android:layout_row="5"
-        style="@style/Widget.AppCompat.Button.Colored"
+        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
         android:layout_gravity="right" />
 
     <ProgressBar

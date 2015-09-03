@@ -16,9 +16,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:hint="Host"
-        android:phoneNumber="false"
-        android:singleLine="true" />
+        android:hint="@string/host_text_view"
+        android:singleLine="true"
+ />
 
     <EditText
         android:layout_width="wrap_content"
@@ -31,7 +31,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/buttonSave"
         android:layout_alignEnd="@+id/buttonSave"
-        android:hint="Port:22"
+        android:hint="@string/port_text_view"
         android:singleLine="true" />
 
     <EditText
@@ -40,7 +40,7 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/username"
-        android:hint="Name"
+        android:hint="@string/username_text_view"
         android:layout_below="@+id/port"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -54,7 +54,7 @@
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/password"
-        android:hint="Password"
+        android:hint="@string/password_text_view"
         android:layout_below="@+id/username"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -71,7 +71,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:onClick="saveSettings"
-        style="@style/Base.Widget.AppCompat.Button.Colored" />
+        style="@style/Widget.AppCompat.Button.Borderless.Colored" />
 
     <CheckBox
         android:layout_width="wrap_content"
@@ -82,5 +82,16 @@
         android:layout_alignRight="@+id/buttonSave"
         android:layout_alignEnd="@+id/buttonSave"
         android:checked="false" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/clear_button"
+        android:id="@+id/clearButton"
+        style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_alignTop="@+id/buttonSave"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="clearAll" />
 
 </RelativeLayout>
